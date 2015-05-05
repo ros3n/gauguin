@@ -1,10 +1,16 @@
 module Gauguin
   class Painting
-    def initialize(path, image_repository = nil, colors_retriever = nil,
+    def initialize(image, image_repository = nil, colors_retriever = nil,
                    colors_limiter = nil, noise_reducer = nil,
                    colors_clusterer = nil, image_recolorer = nil)
       @image_repository = image_repository || Gauguin::ImageRepository.new
-      @image = @image_repository.get(path)
+      if image.instance_of? String
+        @image = @image_repository.get(path)
+      else
+        gimage = Gauguin::Image.new
+        gimage.image = image
+        @image = gimage
+      end
       @colors_retriever = colors_retriever || Gauguin::ColorsRetriever.new(@image)
       @colors_limiter = colors_limiter || Gauguin::ColorsLimiter.new
       @noise_reducer = noise_reducer || Gauguin::NoiseReducer.new
@@ -26,4 +32,3 @@ module Gauguin
     end
   end
 end
-
